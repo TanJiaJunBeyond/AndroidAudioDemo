@@ -1,0 +1,57 @@
+cmake_minimum_required(VERSION 3.22.1)
+
+project("androidaudiodemo")
+
+add_library(
+        ${CMAKE_PROJECT_NAME}
+        SHARED
+        androidaudiodemo.cpp
+        lame/reservoir.c
+        lame/mpglib_interface.c
+        lame/machine.h
+        lame/fft.h
+        lame/set_get.c
+        lame/quantize_pvt.h
+        lame/psymodel.h
+        lame/newmdct.c
+        lame/id3tag.h
+        lame/lame-analysis.h
+        lame/id3tag.c
+        lame/reservoir.h
+        lame/lameerror.h
+        lame/set_get.h
+        lame/quantize.c
+        lame/fft.c
+        lame/l3side.h
+        lame/newmdct.h
+        lame/quantize.h
+        lame/gain_analysis.c
+        lame/encoder.c
+        lame/lame.c
+        lame/bitstream.c
+        lame/quantize_pvt.c
+        lame/presets.c
+        lame/bitstream.h
+        lame/encoder.h
+        lame/gain_analysis.h
+        lame/lame_global_flags.h
+        lame/psymodel.c
+        lame/lame.h
+        lame/tables.c
+        lame/tables.h
+        lame/takehiro.c
+        lame/util.c
+        lame/util.h
+        lame/vbrquantize.c
+        lame/vbrquantize.h
+        lame/VbrTag.c
+        lame/VbrTag.h
+        lame/version.c
+        lame/version.h
+)
+
+target_link_libraries(
+        ${CMAKE_PROJECT_NAME}
+        android
+        log
+)
