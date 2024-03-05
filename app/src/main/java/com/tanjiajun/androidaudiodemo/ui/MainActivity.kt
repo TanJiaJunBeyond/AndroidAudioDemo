@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun ContentView() {
+    private fun ContentView() {
         ConstraintLayout(modifier = Modifier.fillMaxSize()) {
             val (topBox, lameVersionText) = createRefs()
             Box(
@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity() {
      */
     private external fun getLameVersion(): String
 
-    companion object {
+    private companion object {
         init {
             System.loadLibrary("androidaudiodemo")
         }
