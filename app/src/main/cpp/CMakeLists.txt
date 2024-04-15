@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 3.22.1)
 project("androidaudiodemo")
 
 add_library(
-        ${CMAKE_PROJECT_NAME}
+        MP3Encoder
         SHARED
-        androidaudiodemo.cpp
+        mp3_encoder.cpp
         lame/reservoir.c
         lame/mpglib_interface.c
         lame/machine.h
@@ -51,7 +51,7 @@ add_library(
 )
 
 target_link_libraries(
-        ${CMAKE_PROJECT_NAME}
+        MP3Encoder
         android
         log
 )

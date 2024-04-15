@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">AndroidAudioDemo</string>
+
+    <string name="enter_audio_editing_page">进入音频编辑页面</string>
+    <string name="need_write_external_storage_permission">需要写入外部存储器权限</string>
+    <string name="need_read_external_storage_permission">需要读取外部存储器权限</string>
+    <string name="need_read_media_audio_permission">需要读取媒体音频权限</string>
+    <string name="need_record_audio_permission">需要录制音频权限</string>
+    <string name="audio_record">录音</string>
+    <string name="stop_recording_audio">结束录音</string>
+    <string name="audio_play">播放音频</string>
+    <string name="stop_playing_audio">停止播放音频</string>
+    <string name="save_as_pcm_file">保存为PCM文件</string>
+    <string name="pcm_file_absolute_path">PCM文件绝对路径：</string>
+    <string name="convert_to_wav_file">转换为WAV文件</string>
+    <string name="play_wav_file">播放WAV文件</string>
+    <string name="stop_play_wav_file">停止播放WAV文件</string>
+    <string name="wav_file_absolute_path">WAV文件绝对路径：</string>
+    <string name="encode_to_mp3_file">编码为MP3文件</string>
+    <string name="play_mp3_file">播放MP3文件</string>
+    <string name="stop_play_mp3_file">停止播放MP3文件</string>
+    <string name="mp3_file_absolute_path">MP3文件绝对路径：</string>
 </resources>
