@@ -22,9 +22,10 @@ class AudioRecorder private constructor(
     private val sampleRateInHz: Int,
     private val audioFormat: AudioRecorderFormat,
     private val channelConfig: AudioRecorderChannelConfig,
-    private val noiseSuppressor: NoiseSuppressor?,
     private val acousticEchoCanceler: AcousticEchoCanceler?,
-    private val listener: AudioRecordListener? = null
+    private var automaticGainControl: AutomaticGainControl?,
+    private val noiseSuppressor: NoiseSuppressor?,
+    private val listener: AudioRecordListener?
 ) {
 
     private val shortArrays: MutableList<ShortArray> by lazy { mutableListOf() }
@@ -113,8 +114,9 @@ class AudioRecorder private constructor(
         clearRecordedData()
         byteLength = 0L
         audioRecord.release()
-        noiseSuppressor?.release()
         acousticEchoCanceler?.release()
+        automaticGainControl?.release()
+        noiseSuppressor?.release()
     }
 
     /**
@@ -205,13 +207,14 @@ class AudioRecorder private constructor(
         private var sampleRateInHz: Int = 44100
         private var audioFormat: AudioRecorderFormat = AudioRecorderFormat.PCM_16BIT
         private var channelConfig: AudioRecorderChannelConfig = AudioRecorderChannelConfig.STEREO
-        private var addNoiseSuppressor: Boolean = false
         private var addAcousticEchoCanceler: Boolean = false
         private var addAutomaticGainControl: Boolean = false
-        private var noiseSuppressor: NoiseSuppressor? = null
+        private var addNoiseSuppressor: Boolean = false
+        private var listener: AudioRecordListener? = null
+
         private var acousticEchoCanceler: AcousticEchoCanceler? = null
         private var automaticGainControl: AutomaticGainControl? = null
-        private var listener: AudioRecordListener? = null
+        private var noiseSuppressor: NoiseSuppressor? = null
 
         /**
          * 设置音频来源
@@ -246,14 +249,6 @@ class AudioRecorder private constructor(
         }
 
         /**
-         * 添加噪音抑制器
-         */
-        fun addNoiseSuppressor(): Builder {
-            addNoiseSuppressor = true
-            return this
-        }
-
-        /**
          * 添加声学回声消除器
          */
         fun addAcousticEchoCanceler(): Builder {
@@ -266,6 +261,14 @@ class AudioRecorder private constructor(
          */
         fun addAutomaticGainControl(): Builder {
             addAutomaticGainControl = true
+            return this
+        }
+
+        /**
+         * 添加噪音抑制器
+         */
+        fun addNoiseSuppressor(): Builder {
+            addNoiseSuppressor = true
             return this
         }
 
@@ -292,9 +295,9 @@ class AudioRecorder private constructor(
                 audioFormat.value,
                 minBufferSize
             ).apply {
-                handleNoiseSuppress(audioSessionId)
                 handleAcousticEchoCancel(audioSessionId)
                 handleAutomaticGainControl(audioSessionId)
+                handleNoiseSuppress(audioSessionId)
             }
             return AudioRecorder(
                 minBufferSize,
@@ -302,17 +305,11 @@ class AudioRecorder private constructor(
                 sampleRateInHz,
                 audioFormat,
                 channelConfig,
-                noiseSuppressor,
                 acousticEchoCanceler,
+                automaticGainControl,
+                noiseSuppressor,
                 listener
             )
-        }
-
-        private fun handleNoiseSuppress(audioSessionId: Int) {
-            if (addNoiseSuppressor && NoiseSuppressor.isAvailable()) {
-                noiseSuppressor = NoiseSuppressor.create(audioSessionId)
-                noiseSuppressor?.run { enabled = true }
-            }
         }
 
         private fun handleAcousticEchoCancel(audioSessionId: Int) {
@@ -326,6 +323,13 @@ class AudioRecorder private constructor(
             if (addAutomaticGainControl && AutomaticGainControl.isAvailable()) {
                 automaticGainControl = AutomaticGainControl.create(audioSessionId)
                 automaticGainControl?.run { enabled = true }
+            }
+        }
+
+        private fun handleNoiseSuppress(audioSessionId: Int) {
+            if (addNoiseSuppressor && NoiseSuppressor.isAvailable()) {
+                noiseSuppressor = NoiseSuppressor.create(audioSessionId)
+                noiseSuppressor?.run { enabled = true }
             }
         }
 
