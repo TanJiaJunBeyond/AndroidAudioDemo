@@ -1,7 +1,5 @@
 package com.tanjiajun.androidaudiodemo.utils
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -33,7 +31,7 @@ object AudioFormatConverter {
         if (inputPCMFilePath.isEmpty() || outputWAVFilePath.isEmpty()) {
             return null
         }
-        return withContext(Dispatchers.IO) {
+        return withIO {
             val data = ByteArray(1024)
             val outputWAVFile = File(outputWAVFilePath)
             if (outputWAVFile.exists()) {
@@ -189,7 +187,7 @@ object AudioFormatConverter {
         if (inputPCMFilePath.isEmpty() || outputMP3FilePath.isEmpty()) {
             return null
         }
-        return withContext(Dispatchers.IO) {
+        return withIO {
             val outputMP3File = File(outputMP3FilePath)
             if (outputMP3File.exists()) {
                 outputMP3File.delete()
@@ -204,7 +202,7 @@ object AudioFormatConverter {
                 bitRate = AudioUtils.getBitRate(sampleRateInHz, bitDepth, channelCount)
             )
             if (!result) {
-                return@withContext null
+                return@withIO null
             }
             LAMEUtils.encode()
             LAMEUtils.destroy()

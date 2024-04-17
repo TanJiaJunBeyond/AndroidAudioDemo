@@ -150,6 +150,7 @@ class AudioRecorder private constructor(
     /**
      * 将录音数据保存成文件
      *
+     * @param outputPCMFilePath 输出的PCM文件路径
      * @return 输出的文件
      */
     suspend fun saveDataAsPCM(outputPCMFilePath: String): File? {
