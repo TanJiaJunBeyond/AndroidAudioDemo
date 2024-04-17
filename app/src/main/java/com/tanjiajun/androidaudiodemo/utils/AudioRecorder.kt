@@ -35,11 +35,11 @@ class AudioRecorder private constructor(
      * 录制音频
      */
     suspend fun record() {
-        if (audioRecord.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
-            throw RuntimeException("Cannot be call record() while recording.")
-        }
         if (audioRecord.state == AudioRecord.STATE_UNINITIALIZED) {
             return
+        }
+        if (audioRecord.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
+            throw RuntimeException("Cannot be call record() while recording.")
         }
         withIO {
             audioRecord.startRecording()
