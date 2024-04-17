@@ -32,7 +32,7 @@ class AudioRecorder private constructor(
     private var byteLength: Long = 0L
 
     /**
-     * 录制一段音频
+     * 录制音频
      */
     suspend fun record() {
         if (audioRecord.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
@@ -80,15 +80,33 @@ class AudioRecorder private constructor(
         }
     }
 
+    /**
+     * 得到位深度为16bit的PCM音频
+     *
+     * @return 音频数据
+     */
     fun getRecordedDataFor16BitPCM(): List<ShortArray> =
         shortArrays.toList()
 
+    /**
+     * 得到位深度为32bit的PCM音频
+     *
+     * @return 音频数据
+     */
     fun getRecordedDataFor32BitPCM(): List<FloatArray> =
         floatArrays.toList()
 
+    /**
+     * 是否正在录音
+     *
+     * @return 是否正在录音
+     */
     fun isRecording(): Boolean =
         audioRecord.state == AudioRecord.RECORDSTATE_RECORDING
 
+    /**
+     * 是否有已经录制的音频
+     */
     fun hasRecordedAudio(): Boolean =
         shortArrays.isNotEmpty() || floatArrays.isNotEmpty()
 
@@ -256,27 +274,6 @@ class AudioRecorder private constructor(
             return this
         }
 
-        private fun handleNoiseSuppress(audioSessionId: Int) {
-            if (addNoiseSuppressor && NoiseSuppressor.isAvailable()) {
-                noiseSuppressor = NoiseSuppressor.create(audioSessionId)
-                noiseSuppressor?.run { enabled = true }
-            }
-        }
-
-        private fun handleAcousticEchoCancel(audioSessionId: Int) {
-            if (addAcousticEchoCanceler && AcousticEchoCanceler.isAvailable()) {
-                acousticEchoCanceler = AcousticEchoCanceler.create(audioSessionId)
-                acousticEchoCanceler?.run { enabled = true }
-            }
-        }
-
-        private fun handleAutomaticGainControl(audioSessionId: Int) {
-            if (addAutomaticGainControl && AutomaticGainControl.isAvailable()) {
-                automaticGainControl = AutomaticGainControl.create(audioSessionId)
-                automaticGainControl?.run { enabled = true }
-            }
-        }
-
         @SuppressLint("MissingPermission")
         fun build(): AudioRecorder {
             minBufferSize =
@@ -306,6 +303,27 @@ class AudioRecorder private constructor(
                 acousticEchoCanceler,
                 listener
             )
+        }
+
+        private fun handleNoiseSuppress(audioSessionId: Int) {
+            if (addNoiseSuppressor && NoiseSuppressor.isAvailable()) {
+                noiseSuppressor = NoiseSuppressor.create(audioSessionId)
+                noiseSuppressor?.run { enabled = true }
+            }
+        }
+
+        private fun handleAcousticEchoCancel(audioSessionId: Int) {
+            if (addAcousticEchoCanceler && AcousticEchoCanceler.isAvailable()) {
+                acousticEchoCanceler = AcousticEchoCanceler.create(audioSessionId)
+                acousticEchoCanceler?.run { enabled = true }
+            }
+        }
+
+        private fun handleAutomaticGainControl(audioSessionId: Int) {
+            if (addAutomaticGainControl && AutomaticGainControl.isAvailable()) {
+                automaticGainControl = AutomaticGainControl.create(audioSessionId)
+                automaticGainControl?.run { enabled = true }
+            }
         }
 
     }
