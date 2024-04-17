@@ -313,24 +313,36 @@ class AudioRecorder private constructor(
         }
 
         private fun handleAcousticEchoCancel(audioSessionId: Int) {
-            if (addAcousticEchoCanceler && AcousticEchoCanceler.isAvailable()) {
-                acousticEchoCanceler = AcousticEchoCanceler.create(audioSessionId)
-                acousticEchoCanceler?.run { enabled = true }
+            if (!addAcousticEchoCanceler) {
+                return
             }
+            if (!AcousticEchoCanceler.isAvailable()) {
+                return
+            }
+            acousticEchoCanceler = AcousticEchoCanceler.create(audioSessionId)
+            acousticEchoCanceler?.enabled = true
         }
 
         private fun handleAutomaticGainControl(audioSessionId: Int) {
-            if (addAutomaticGainControl && AutomaticGainControl.isAvailable()) {
-                automaticGainControl = AutomaticGainControl.create(audioSessionId)
-                automaticGainControl?.run { enabled = true }
+            if (!addAcousticEchoCanceler) {
+                return
             }
+            if (!AutomaticGainControl.isAvailable()) {
+                return
+            }
+            automaticGainControl = AutomaticGainControl.create(audioSessionId)
+            automaticGainControl?.enabled = true
         }
 
         private fun handleNoiseSuppress(audioSessionId: Int) {
-            if (addNoiseSuppressor && NoiseSuppressor.isAvailable()) {
-                noiseSuppressor = NoiseSuppressor.create(audioSessionId)
-                noiseSuppressor?.run { enabled = true }
+            if (!addNoiseSuppressor) {
+                return
             }
+            if (!NoiseSuppressor.isAvailable()) {
+                return
+            }
+            noiseSuppressor = NoiseSuppressor.create(audioSessionId)
+            noiseSuppressor?.enabled = true
         }
 
     }
