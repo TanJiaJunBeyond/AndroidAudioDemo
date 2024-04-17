@@ -81,36 +81,6 @@ class AudioRecorder private constructor(
     }
 
     /**
-     * 得到位深度为16bit的PCM音频
-     *
-     * @return 音频数据
-     */
-    fun getRecordedDataFor16BitPCM(): List<ShortArray> =
-        shortArrays.toList()
-
-    /**
-     * 得到位深度为32bit的PCM音频
-     *
-     * @return 音频数据
-     */
-    fun getRecordedDataFor32BitPCM(): List<FloatArray> =
-        floatArrays.toList()
-
-    /**
-     * 是否正在录音
-     *
-     * @return 是否正在录音
-     */
-    fun isRecording(): Boolean =
-        audioRecord.state == AudioRecord.RECORDSTATE_RECORDING
-
-    /**
-     * 是否有已经录制的音频
-     */
-    fun hasRecordedAudio(): Boolean =
-        shortArrays.isNotEmpty() || floatArrays.isNotEmpty()
-
-    /**
      * 暂停录音
      */
     fun stop() {
@@ -146,6 +116,38 @@ class AudioRecorder private constructor(
         noiseSuppressor?.release()
         acousticEchoCanceler?.release()
     }
+
+    /**
+     * 是否正在录音
+     *
+     * @return 是否正在录音
+     */
+    fun isRecording(): Boolean =
+        audioRecord.state == AudioRecord.RECORDSTATE_RECORDING
+
+    /**
+     * 是否存在已经录制的音频
+     *
+     * @return 是否存在已经录制的音频
+     */
+    fun hasRecordedAudio(): Boolean =
+        shortArrays.isNotEmpty() || floatArrays.isNotEmpty()
+
+    /**
+     * 得到位深度为16bit的PCM音频
+     *
+     * @return 音频数据
+     */
+    fun getRecordedDataFor16BitPCM(): List<ShortArray> =
+        shortArrays.toList()
+
+    /**
+     * 得到位深度为32bit的PCM音频
+     *
+     * @return 音频数据
+     */
+    fun getRecordedDataFor32BitPCM(): List<FloatArray> =
+        floatArrays.toList()
 
     /**
      * 将录音数据保存成文件
