@@ -27,7 +27,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.tanjiajun.androidaudiodemo.R
 import com.tanjiajun.androidaudiodemo.ui.theme.Black
-import com.tanjiajun.androidaudiodemo.ui.theme.Purple40
+import com.tanjiajun.androidaudiodemo.ui.theme.Purple
 import com.tanjiajun.androidaudiodemo.ui.theme.White
 import com.tanjiajun.androidaudiodemo.utils.LAMEUtils
 import com.tanjiajun.androidaudiodemo.utils.toastShort
@@ -69,7 +69,7 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(45.dp)
-                    .background(Purple40)
+                    .background(Purple)
                     .constrainAs(topBox) {
                         start.linkTo(parent.start)
                         top.linkTo(parent.top)

@@ -4,12 +4,16 @@ import android.os.Bundle
 import android.os.Environment
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tanjiajun.androidaudiodemo.R
+import com.tanjiajun.androidaudiodemo.ui.theme.Black50Transparency
+import com.tanjiajun.androidaudiodemo.ui.theme.White
 import com.tanjiajun.androidaudiodemo.utils.otherwise
 import com.tanjiajun.androidaudiodemo.utils.yes
 import com.tanjiajun.androidaudiodemo.viewmodel.AudioEditingViewModel
@@ -41,6 +47,11 @@ class AudioEditingActivity : ComponentActivity() {
     @Composable
     private fun ContentView() {
         viewModel = viewModel(factory = AudioEditingViewModel.provideFactory())
+        with(viewModel) {
+            setSavingText(getString(R.string.saving))
+            setConvertingText(getString(R.string.converting))
+            setEncodingText(getString(R.string.encoding))
+        }
         Column(
             modifier = Modifier.padding(
                 start = 16.dp,
@@ -52,29 +63,66 @@ class AudioEditingActivity : ComponentActivity() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 AudioRecordButton()
-                Spacer(modifier = Modifier.size(10.dp))
+                Spacer10dp()
                 AudioRecordingDurationText()
             }
-            Spacer(modifier = Modifier.size(10.dp))
+            Spacer10dp()
             AudioPlayButton()
-            Spacer(modifier = Modifier.size(10.dp))
+            Spacer10dp()
             SaveAsPCMFileButton()
-            Spacer(modifier = Modifier.size(5.dp))
+            Spacer5dp()
             AudioPCMFileAbsolutePathText()
-            Spacer(modifier = Modifier.size(10.dp))
+            Spacer10dp()
             Row {
                 ConvertToWAVFileButton()
                 PlayWAVFileButton()
             }
-            Spacer(modifier = Modifier.size(5.dp))
+            Spacer5dp()
             AudioWAVFileAbsolutePathText()
-            Spacer(modifier = Modifier.size(10.dp))
+            Spacer10dp()
             Row {
                 EncodeToMP3FileButton()
                 PlayMP3FileButton()
             }
-            Spacer(modifier = Modifier.size(5.dp))
+            Spacer5dp()
             AudioMP3FileAbsolutePathText()
+        }
+        LoadingView()
+    }
+
+    @Composable
+    private fun Spacer5dp() {
+        Spacer(modifier = Modifier.size(5.dp))
+    }
+
+    @Composable
+    private fun Spacer10dp() {
+        Spacer(modifier = Modifier.size(10.dp))
+    }
+
+    @Composable
+    private fun LoadingView() {
+        val loadingText: String by viewModel.loadingText.collectAsState()
+        if (loadingText.isEmpty()) {
+            return
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Black50Transparency),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CircularProgressIndicator()
+                Spacer10dp()
+                Text(
+                    text = loadingText,
+                    fontSize = 18.sp,
+                    color = White
+                )
+            }
         }
     }
 

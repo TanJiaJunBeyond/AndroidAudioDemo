@@ -45,7 +45,7 @@ class AudioRecorder private constructor(
         withIO {
             audioRecord.startRecording()
             while (audioRecord.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
-                var byteCount = 0
+                var byteCount: Int
                 if (audioFormat == AudioRecorderFormat.PCM_16BIT) {
                     val shortArray = ShortArray(minBufferSize)
                     byteCount = audioRecord.read(shortArray, 0, shortArray.size) * 2
@@ -163,9 +163,7 @@ class AudioRecorder private constructor(
         }
         return withIO {
             val outputPCMFile = File(outputPCMFilePath)
-            if (outputPCMFile.exists()) {
-                outputPCMFile.delete()
-            } else {
+            if (!outputPCMFile.exists()) {
                 outputPCMFile.parentFile?.mkdirs()
                 outputPCMFile.createNewFile()
             }

@@ -11,12 +11,15 @@
     <string name="audio_play">播放音频</string>
     <string name="stop_playing_audio">停止播放音频</string>
     <string name="save_as_pcm_file">保存为PCM文件</string>
+    <string name="saving">保存中</string>
     <string name="pcm_file_absolute_path">PCM文件绝对路径：</string>
     <string name="convert_to_wav_file">转换为WAV文件</string>
+    <string name="converting">转换中</string>
     <string name="play_wav_file">播放WAV文件</string>
     <string name="stop_play_wav_file">停止播放WAV文件</string>
     <string name="wav_file_absolute_path">WAV文件绝对路径：</string>
     <string name="encode_to_mp3_file">编码为MP3文件</string>
+    <string name="encoding">编码中</string>
     <string name="play_mp3_file">播放MP3文件</string>
     <string name="stop_play_mp3_file">停止播放MP3文件</string>
     <string name="mp3_file_absolute_path">MP3文件绝对路径：</string>

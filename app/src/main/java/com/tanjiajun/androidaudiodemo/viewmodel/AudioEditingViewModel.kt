@@ -20,6 +20,9 @@ import kotlinx.coroutines.launch
  */
 class AudioEditingViewModel : ViewModel() {
 
+    private val _loadingText = MutableStateFlow("")
+    val loadingText: StateFlow<String> = _loadingText.asStateFlow()
+
     private val _isAudioRecording = MutableStateFlow(false)
     val isAudioRecording: StateFlow<Boolean> = _isAudioRecording.asStateFlow()
 
@@ -46,6 +49,10 @@ class AudioEditingViewModel : ViewModel() {
 
     private val _isPlayingMP3File = MutableStateFlow(false)
     val isPlayingMP3File: StateFlow<Boolean> = _isPlayingMP3File.asStateFlow()
+
+    private var savingText: String = ""
+    private var convertingText: String = ""
+    private var encodingText: String = ""
 
     private val sampleRateInHz = 44100
 
@@ -81,6 +88,18 @@ class AudioEditingViewModel : ViewModel() {
     }
 
     private val audioPlayer: AudioPlayer by lazy { AudioPlayer() }
+
+    fun setSavingText(savingText: String) {
+        this.savingText = savingText
+    }
+
+    fun setConvertingText(convertingText: String) {
+        this.convertingText = convertingText
+    }
+
+    fun setEncodingText(encodingText: String) {
+        this.encodingText = encodingText
+    }
 
     fun audioRecord() {
         viewModelScope.launch {
@@ -145,13 +164,16 @@ class AudioEditingViewModel : ViewModel() {
 
     fun saveAsPCMFile(outputPCMFilePath: String) {
         viewModelScope.launch {
+            _loadingText.value = savingText
             _audioPCMFileAbsolutePath.value =
                 audioRecorder.saveDataAsPCM(outputPCMFilePath)?.absolutePath ?: ""
+            _loadingText.value = ""
         }
     }
 
     fun convertToWAVFile(outputWAVFilePath: String) {
         viewModelScope.launch {
+            _loadingText.value = convertingText
             _audioWAVFileAbsolutePath.value =
                 AudioFormatConverter.convertPCMToWAV(
                     inputPCMFilePath = _audioPCMFileAbsolutePath.value,
@@ -162,6 +184,7 @@ class AudioEditingViewModel : ViewModel() {
                         audioRecorderChannelConfig.value
                     )
                 )?.absolutePath ?: ""
+            _loadingText.value = ""
         }
     }
 
@@ -188,6 +211,7 @@ class AudioEditingViewModel : ViewModel() {
 
     fun encodeToMP3File(outputMP3FilePath: String) {
         viewModelScope.launch {
+            _loadingText.value = encodingText
             _audioMP3FileAbsolutePath.value =
                 AudioFormatConverter.encodePCMToMP3(
                     inputPCMFilePath = _audioPCMFileAbsolutePath.value,
@@ -198,6 +222,7 @@ class AudioEditingViewModel : ViewModel() {
                         audioRecorderChannelConfig.value
                     )
                 )?.absolutePath ?: ""
+            _loadingText.value = ""
         }
     }
 

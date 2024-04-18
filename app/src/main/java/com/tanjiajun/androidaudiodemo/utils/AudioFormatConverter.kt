@@ -34,9 +34,8 @@ object AudioFormatConverter {
         return withIO {
             val data = ByteArray(1024)
             val outputWAVFile = File(outputWAVFilePath)
-            if (outputWAVFile.exists()) {
-                outputWAVFile.delete()
-            } else {
+            if (!outputWAVFile.exists()) {
+                outputWAVFile.parentFile?.mkdirs()
                 outputWAVFile.createNewFile()
             }
             FileInputStream(inputPCMFilePath).use { fileInputStream ->
@@ -189,9 +188,8 @@ object AudioFormatConverter {
         }
         return withIO {
             val outputMP3File = File(outputMP3FilePath)
-            if (outputMP3File.exists()) {
-                outputMP3File.delete()
-            } else {
+            if (!outputMP3File.exists()) {
+                outputMP3File.parentFile?.mkdirs()
                 outputMP3File.createNewFile()
             }
             val result: Boolean = LAMEUtils.init(
