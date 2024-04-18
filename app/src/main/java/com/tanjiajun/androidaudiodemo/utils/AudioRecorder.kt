@@ -69,13 +69,13 @@ class AudioRecorder private constructor(
                 }
                 withMain {
                     byteLength += byteCount
-                    val durationInSecond: Long = AudioUtils.getDurationInSecond(
+                    val durationInSec: Long = AudioUtils.getAudioDurationInSec(
                         byteLength = byteLength,
                         sampleRateInHz = sampleRateInHz,
                         bitDepth = AudioUtils.getBitDepthByAudioFormat(audioFormat.value),
                         channelCount = AudioUtils.getChannelCountByChannelConfig(channelConfig.value)
                     )
-                    listener?.onRecording(durationInSecond)
+                    listener?.onRecording(durationInSec)
                 }
             }
         }
@@ -377,9 +377,9 @@ class AudioRecorder private constructor(
         /**
          * 正在录音
          *
-         * @param durationInSecond 时长，单位：秒
+         * @param durationInSec 音频时长，单位：秒
          */
-        fun onRecording(durationInSecond: Long)
+        fun onRecording(durationInSec: Long)
 
     }
 

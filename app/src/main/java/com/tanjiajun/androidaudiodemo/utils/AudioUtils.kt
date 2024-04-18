@@ -30,10 +30,10 @@ object AudioUtils {
      * @param sampleRateInHz 采样率，单位：赫兹
      * @param bitDepth 位深度
      * @param channelCount 声道数
-     * @return 时长，单位：秒
+     * @return 音频时长，单位：秒
      */
     @JvmStatic
-    fun getDurationInSecond(
+    fun getAudioDurationInSec(
         byteLength: Long,
         sampleRateInHz: Int,
         bitDepth: Int,
