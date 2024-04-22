@@ -125,12 +125,12 @@ object AudioFormatConverter {
         header[13] = 'm'.code.toByte()
         header[14] = 't'.code.toByte()
         header[15] = ' '.code.toByte()
-        // Subchunk1Size：一般为16
+        // Subchunk1Size：如果是PCM，值为16
         header[16] = 16
         header[17] = 0
         header[18] = 0
         header[19] = 0
-        // AudioFormat：一般为1，用来表示PCM编码
+        // AudioFormat：如果是PCM，值为1，表示线性量化
         header[20] = 1
         header[21] = 0
         // NumChannels：声道数
