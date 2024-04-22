@@ -106,11 +106,11 @@ object AudioFormatConverter {
         header[2] = 'F'.code.toByte()
         header[3] = 'F'.code.toByte()
         /**
-         * 数据大小：36+Subchunk2Size（值为PCM文件大小，也就是totalAudioSize），更准确地说就是
+         * 总数据大小：36+Subchunk2Size（值为PCM文件大小，也就是totalAudioSize），更准确地说就是
          * 4 + (8 + Subchunk1Size（值为16）) + (8 + Subchunk2Size（值为PCM文件大小，也就是totalAudioSize）)
          */
         val totalDataSize = 36 + totalAudioSize
-        // ChunkSize：数据大小
+        // ChunkSize：总数据大小
         header[4] = (totalDataSize and 0xff).toByte()
         header[5] = (totalDataSize shr 8 and 0xff).toByte()
         header[6] = (totalDataSize shr 16 and 0xff).toByte()
