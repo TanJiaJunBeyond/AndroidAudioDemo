@@ -125,7 +125,7 @@ object AudioFormatConverter {
         header[13] = 'm'.code.toByte()
         header[14] = 't'.code.toByte()
         header[15] = ' '.code.toByte()
-        // Subchunk1Size：“fmt ”sub-chunk的大小为16字节
+        // Subchunk1Size：一般为16
         header[16] = 16
         header[17] = 0
         header[18] = 0
