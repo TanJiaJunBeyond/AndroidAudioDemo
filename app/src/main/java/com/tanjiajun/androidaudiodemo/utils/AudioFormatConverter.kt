@@ -105,13 +105,16 @@ object AudioFormatConverter {
         header[1] = 'I'.code.toByte()
         header[2] = 'F'.code.toByte()
         header[3] = 'F'.code.toByte()
-        // 数据大小：由于不包含字母“RIFF”和“WAV”，所以是44-8=36，然后加上PCM文件大小（totalAudioSize）
-        val totalDataLen = totalAudioSize + 36
+        /**
+         * 数据大小：36+Subchunk2Size（值为PCM文件大小，也就是totalAudioSize），更准确地说就是
+         * 4 + (8 + Subchunk1Size（值为16）) + (8 + Subchunk2Size（值为PCM文件大小，也就是totalAudioSize）)
+         */
+        val totalDataSize = 36 + totalAudioSize
         // ChunkSize：数据大小
-        header[4] = (totalDataLen and 0xff).toByte()
-        header[5] = (totalDataLen shr 8 and 0xff).toByte()
-        header[6] = (totalDataLen shr 16 and 0xff).toByte()
-        header[7] = (totalDataLen shr 24 and 0xff).toByte()
+        header[4] = (totalDataSize and 0xff).toByte()
+        header[5] = (totalDataSize shr 8 and 0xff).toByte()
+        header[6] = (totalDataSize shr 16 and 0xff).toByte()
+        header[7] = (totalDataSize shr 24 and 0xff).toByte()
         // Format：字母“WAVE”
         header[8] = 'W'.code.toByte()
         header[9] = 'A'.code.toByte()
