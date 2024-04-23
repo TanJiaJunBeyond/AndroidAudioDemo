@@ -1,5 +1,7 @@
 package com.tanjiajun.androidaudiodemo.utils
 
+import java.io.BufferedInputStream
+import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -32,27 +34,31 @@ object AudioFormatConverter {
             return null
         }
         return withIO {
-            val data = ByteArray(1024)
             val outputWAVFile = File(outputWAVFilePath)
             if (!outputWAVFile.exists()) {
                 outputWAVFile.parentFile?.mkdirs()
                 outputWAVFile.createNewFile()
             }
             FileInputStream(inputPCMFilePath).use { fileInputStream ->
-                FileOutputStream(outputWAVFilePath).use { fileOutputStream ->
-                    val totalAudioSize = fileInputStream.channel.size()
-                    // WAV文件头
-                    writeWAVFileHeader(
-                        fileOutputStream,
-                        totalAudioSize,
-                        sampleRateInHz,
-                        bitDepth,
-                        channelCount
-                    )
-                    // Data：音频数据
-                    var length: Int
-                    while (fileInputStream.read(data).also { length = it } > 0) {
-                        fileOutputStream.write(data, 0, length)
+                BufferedInputStream(fileInputStream).use { bufferedInputStream ->
+                    FileOutputStream(outputWAVFilePath).use { fileOutputStream ->
+                        BufferedOutputStream(fileOutputStream).use { bufferedOutputStream ->
+                            val totalAudioSize = fileInputStream.channel.size()
+                            // WAV文件头
+                            writeWAVFileHeader(
+                                bufferedOutputStream,
+                                totalAudioSize,
+                                sampleRateInHz,
+                                bitDepth,
+                                channelCount
+                            )
+                            // Data：音频数据
+                            val buffer = ByteArray(1024)
+                            var length: Int
+                            while (bufferedInputStream.read(buffer).also { length = it } > 0) {
+                                bufferedOutputStream.write(buffer, 0, length)
+                            }
+                        }
                     }
                 }
             }
@@ -61,9 +67,9 @@ object AudioFormatConverter {
     }
 
     /**
-     * 把WAV文件头写入文件输出流
+     * 把WAV文件头写入缓冲输出流
      *
-     * @param fileOutputStream 文件输出流
+     * @param bufferedOutputStream 缓冲输出流
      * @param totalAudioSize 整个音频PCM数据大小
      * @param sampleRateInHz 采样率，单位：频率
      * @param bitDepth 位深度
@@ -72,14 +78,14 @@ object AudioFormatConverter {
      */
     @Throws(IOException::class)
     private fun writeWAVFileHeader(
-        fileOutputStream: FileOutputStream,
+        bufferedOutputStream: BufferedOutputStream,
         totalAudioSize: Long,
         sampleRateInHz: Int,
         bitDepth: Int,
         channelCount: Int
     ) {
-        val header = getWAVHeader(totalAudioSize, sampleRateInHz, bitDepth, channelCount)
-        fileOutputStream.write(header, 0, 44)
+        val header: ByteArray = getWAVHeader(totalAudioSize, sampleRateInHz, bitDepth, channelCount)
+        bufferedOutputStream.write(header, 0, 44)
     }
 
     /**

@@ -7,6 +7,7 @@ import android.media.MediaRecorder
 import android.media.audiofx.AcousticEchoCanceler
 import android.media.audiofx.AutomaticGainControl
 import android.media.audiofx.NoiseSuppressor
+import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
 
@@ -168,13 +169,15 @@ class AudioRecorder private constructor(
                 outputPCMFile.createNewFile()
             }
             FileOutputStream(outputPCMFile).use { fileOutputStream ->
-                if (audioFormat == AudioRecorderFormat.PCM_16BIT) {
-                    shortArrays.forEach {
-                        fileOutputStream.write(convertShortArrayToByteArray(it))
-                    }
-                } else {
-                    floatArrays.forEach {
-                        fileOutputStream.write(convertFloatArrayToByteArray(it))
+                BufferedOutputStream(fileOutputStream).use { bufferedOutputStream ->
+                    if (audioFormat == AudioRecorderFormat.PCM_16BIT) {
+                        shortArrays.forEach {
+                            bufferedOutputStream.write(convertShortArrayToByteArray(it))
+                        }
+                    } else {
+                        floatArrays.forEach {
+                            bufferedOutputStream.write(convertFloatArrayToByteArray(it))
+                        }
                     }
                 }
             }
