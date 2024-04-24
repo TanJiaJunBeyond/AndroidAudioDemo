@@ -40,19 +40,19 @@ object AudioFormatConverter {
                 outputWAVFile.createNewFile()
             }
             FileInputStream(inputPCMFilePath).use { fileInputStream ->
-                BufferedInputStream(fileInputStream).use { bufferedInputStream ->
-                    FileOutputStream(outputWAVFilePath).use { fileOutputStream ->
-                        BufferedOutputStream(fileOutputStream).use { bufferedOutputStream ->
-                            val totalAudioSize = fileInputStream.channel.size()
-                            // WAV文件头
-                            writeWAVFileHeader(
-                                bufferedOutputStream,
-                                totalAudioSize,
-                                sampleRateInHz,
-                                bitDepth,
-                                channelCount
-                            )
-                            // Data：音频数据
+                FileOutputStream(outputWAVFilePath).use { fileOutputStream ->
+                    BufferedOutputStream(fileOutputStream).use { bufferedOutputStream ->
+                        val totalAudioSize = fileInputStream.channel.size()
+                        // 写入WAV文件头
+                        writeWAVFileHeader(
+                            bufferedOutputStream,
+                            totalAudioSize,
+                            sampleRateInHz,
+                            bitDepth,
+                            channelCount
+                        )
+                        // Data：音频数据
+                        BufferedInputStream(fileInputStream).use { bufferedInputStream ->
                             val buffer = ByteArray(1024)
                             var length: Int
                             while (bufferedInputStream.read(buffer).also { length = it } > 0) {

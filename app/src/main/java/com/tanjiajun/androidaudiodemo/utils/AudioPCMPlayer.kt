@@ -22,12 +22,21 @@ class AudioPCMPlayer private constructor(
         audioData: List<ShortArray>,
         listener: AudioPCMPlayListener? = null
     ) {
+        if (audioTrack.state == AudioTrack.STATE_UNINITIALIZED) {
+            return
+        }
         if (audioFormat != AudioPCMPlayerFormat.PCM_16BIT) {
             return
         }
         withIO {
             audioTrack.play()
             audioData.forEach {
+                if (audioTrack.state == AudioTrack.STATE_UNINITIALIZED) {
+                    return@forEach
+                }
+                if (audioTrack.playState != AudioTrack.PLAYSTATE_PLAYING) {
+                    return@forEach
+                }
                 audioTrack.write(it, 0, it.size)
             }
             withMain {
@@ -46,12 +55,21 @@ class AudioPCMPlayer private constructor(
         audioData: List<FloatArray>,
         listener: AudioPCMPlayListener? = null
     ) {
+        if (audioTrack.state == AudioTrack.STATE_UNINITIALIZED) {
+            return
+        }
         if (audioFormat != AudioPCMPlayerFormat.PCM_FLOAT) {
             return
         }
         withIO {
             audioTrack.play()
             audioData.forEach {
+                if (audioTrack.state == AudioTrack.STATE_UNINITIALIZED) {
+                    return@forEach
+                }
+                if (audioTrack.playState != AudioTrack.PLAYSTATE_PLAYING) {
+                    return@forEach
+                }
                 audioTrack.write(it, 0, it.size, AudioTrack.WRITE_BLOCKING)
             }
             withMain {
