@@ -25,7 +25,7 @@ Java_com_tanjiajun_androidaudiodemo_utils_LAMEUtils_init(
         jint channel_count,
         jint bit_rate
 ) {
-    // 将jstring类型的input_pcm_file_path转换为UTF-8格式的字符型的指针；因为不需要关心JVM是否会返回原始字符串的拷贝，所以isCopy参数传NULL
+    // 将jstring类型的input_pcm_file_path转换为UTF-8编码的字符数组；因为不需要关心JVM是否会返回原始字符串的副本，所以isCopy参数传NULL
     const char *inputPCMFilePath = env->GetStringUTFChars(input_pcm_file_path, NULL);
     // 打开需要输入的PCM文件，如果打开失败就返回NULL；设置文件访问模式为rb，意思是以读方式（r）打开一个二进制文件（b）
     inputPCMFile = fopen(inputPCMFilePath, "rb");
@@ -33,7 +33,7 @@ Java_com_tanjiajun_androidaudiodemo_utils_LAMEUtils_init(
         // 如果需要输入的PCM文件打开失败就返回false
         return false;
     }
-    // 将jstring类型的output_mp3_file_path转换为UTF-8格式的字符型的指针；因为不需要关心JVM是否会返回原始字符串的拷贝，所以isCopy参数传NULL
+    // 将jstring类型的output_mp3_file_path转换为UTF-8编码的字符数组；因 为不需要关心JVM是否会返回原始字符串的副本，所以isCopy参数传NULL
     const char *outputMP3FilePath = env->GetStringUTFChars(output_mp3_file_path, NULL);
     // 打开需要输出的MP3文件，如果打开失败就返回NULL；设置文件访问模式为wb，意思是以写方式（w）打开一个二进制文件（b）
     outputMP3File = fopen(outputMP3FilePath, "wb");
