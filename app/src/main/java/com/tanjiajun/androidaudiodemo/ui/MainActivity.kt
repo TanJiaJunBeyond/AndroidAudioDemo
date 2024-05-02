@@ -43,6 +43,9 @@ class MainActivity : ComponentActivity() {
                 grantResults[Manifest.permission.READ_EXTERNAL_STORAGE] == false ->
                     toastShort(getString(R.string.need_read_external_storage_permission))
 
+                grantResults[Manifest.permission.WRITE_EXTERNAL_STORAGE] == false ->
+                    toastShort(getString(R.string.need_write_external_storage_permission))
+
                 grantResults[Manifest.permission.READ_MEDIA_AUDIO] == false ->
                     toastShort(getString(R.string.need_read_media_audio_permission))
 
@@ -132,6 +135,7 @@ class MainActivity : ComponentActivity() {
             } else {
                 arrayOf(
                     Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.RECORD_AUDIO
                 )
             }
@@ -144,6 +148,12 @@ class MainActivity : ComponentActivity() {
                 Manifest.permission.READ_EXTERNAL_STORAGE
             ) ->
                 toastShort(getString(R.string.need_read_external_storage_permission))
+
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) ->
+                toastShort(getString(R.string.need_write_external_storage_permission))
 
             ActivityCompat.shouldShowRequestPermissionRationale(
                 this,
