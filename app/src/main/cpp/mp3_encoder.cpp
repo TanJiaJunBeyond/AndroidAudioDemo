@@ -27,15 +27,15 @@ Java_com_tanjiajun_androidaudiodemo_utils_LAMEUtils_init(
 ) {
     // 将jstring类型的input_pcm_file_path转换为UTF-8编码的字符数组；因为不需要关心JVM是否会返回原始字符串的副本，所以isCopy参数传NULL
     const char *inputPCMFilePath = env->GetStringUTFChars(input_pcm_file_path, NULL);
-    // 打开需要输入的PCM文件，如果打开失败就返回NULL；设置文件访问模式为rb，意思是以读方式（r）打开一个二进制文件（b）
+    // 以读取二进制文件的方式打开需要输入的PCM文件，如果打开失败就返回NULL
     inputPCMFile = fopen(inputPCMFilePath, "rb");
     if (!inputPCMFile) {
         // 如果需要输入的PCM文件打开失败就返回false
         return false;
     }
-    // 将jstring类型的output_mp3_file_path转换为UTF-8编码的字符数组；因 为不需要关心JVM是否会返回原始字符串的副本，所以isCopy参数传NULL
+    // 将jstring类型的output_mp3_file_path转换为UTF-8编码的字符数组；因为不需要关心JVM是否会返回原始字符串的副本，所以isCopy参数传NULL
     const char *outputMP3FilePath = env->GetStringUTFChars(output_mp3_file_path, NULL);
-    // 打开需要输出的MP3文件，如果打开失败就返回NULL；设置文件访问模式为wb，意思是以写方式（w）打开一个二进制文件（b）
+    // 以写入二进制文件的方式打开需要输出的MP3文件，如果打开失败就返回NULL
     outputMP3File = fopen(outputMP3FilePath, "wb");
     if (!outputMP3File) {
         // 如果需要输出的MP3文件打开失败就返回false
@@ -70,14 +70,14 @@ Java_com_tanjiajun_androidaudiodemo_utils_LAMEUtils_encode(JNIEnv *env, jobject 
     // 每次从PCM文件读取一段bufferSize大小的PCM数据buffer
     while ((readBufferSize = fread(buffer, 2, bufferSize / 2, inputPCMFile)) > 0) {
         for (int i = 0; i < readBufferSize; i++) {
-            // 把buffer的左右声道拆分开
+            // 把该buffer的左右声道拆分开
             if (i % 2 == 0) {
                 leftBuffer[i / 2] = buffer[i];
             } else {
                 rightBuffer[i / 2] = buffer[i];
             }
         }
-        // 编码该buffer
+        // 编码左声道buffer和右声道buffer
         int wroteSize = lame_encode_buffer(
                 lameClient,
                 (short int *) leftBuffer,
@@ -86,7 +86,7 @@ Java_com_tanjiajun_androidaudiodemo_utils_LAMEUtils_encode(JNIEnv *env, jobject 
                 mp3Buffer,
                 bufferSize
         );
-        // 将编码后的数据写入MP3文件
+        // 将编码后的数据写入MP3文件中
         fwrite(mp3Buffer, 1, wroteSize, outputMP3File);
     }
     // 释放内存，并且调用对象数组的析构函数
