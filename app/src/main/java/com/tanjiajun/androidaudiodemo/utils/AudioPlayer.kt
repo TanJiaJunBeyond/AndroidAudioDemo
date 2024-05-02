@@ -21,8 +21,10 @@ class AudioPlayer {
         }
         withIO {
             mediaPlayer.reset()
-            mediaPlayer.setOnCompletionListener {
-                listener?.onCompletion()
+            withMain {
+                mediaPlayer.setOnCompletionListener {
+                    listener?.onCompletion()
+                }
             }
             mediaPlayer.setDataSource(audioFilePath)
             mediaPlayer.prepare()
